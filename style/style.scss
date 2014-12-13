@@ -1,0 +1,96 @@
+@import "reset";
+
+// Color definitions
+$baseColor: rgb(26, 43, 70);
+$darkColor: rgb(14, 23, 37);
+$accentColor: hsl(0, 0%, 100%);
+$glowColor: transparentize($accentColor, .5);
+
+@mixin glowText {
+	text-shadow: 0px 0px 10px $glowColor;
+}
+
+@mixin glowBox {
+	position: relative;
+	z-index: 100;
+	box-shadow: 0px 0px 2px 2px $glowColor;
+}
+
+html {
+	background-color: $baseColor;
+	color: $accentColor;
+	font: {
+		family: "Cabin Condensed", Futura, "sans-serif";
+	}
+}
+
+#wrapper {
+	width: 450px;
+	margin: 150px auto 0px auto;
+	background-color: #666666;
+}
+
+h1 {
+	@include glowText;
+	float: left;
+	width: 295px;
+	font-size: 110px;
+}
+
+.score-container {
+	float: left;
+	width: 125px;
+	padding: 15px;
+	font-size: 25px;
+	text-align: right;
+
+	span {
+		float: left;
+	}
+}
+
+#best-score {
+	@include glowBox;
+	margin-top: 7px;
+	background-color: $accentColor;
+	color: $darkColor;
+}
+
+#now-score {
+	@include glowText;
+	background-color: $darkColor;
+	color: $accentColor;
+	margin-top: 2px;
+}
+
+#grid {
+	float: left;
+	width: 428px;
+	height: 428px;
+	padding: 2px;
+	border: 9px solid $darkColor;
+	margin-top: 25px;
+}
+
+.tile {
+	display: block;
+	float: left;
+	position: relative;
+	width: 84px;
+	height: 84px;
+	background-color: $darkColor;
+	margin-right: 2px;
+	margin-bottom: 2px;
+}
+
+.tile:nth-child(5n) {
+	margin-right: 0px;
+}
+
+p {
+	display: block;
+	float: left;
+	margin-top: 20px;
+	width: 450px;
+	font-size: 20px;
+}

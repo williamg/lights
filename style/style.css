@@ -1,0 +1,103 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after {
+  content: '';
+  content: none; }
+
+q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+html {
+  background-color: #1a2b46;
+  color: white;
+  font-family: "Cabin Condensed", Futura, "sans-serif"; }
+
+#wrapper {
+  width: 450px;
+  margin: 150px auto 0px auto;
+  background-color: #666666; }
+
+h1 {
+  text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
+  float: left;
+  width: 295px;
+  font-size: 110px; }
+
+.score-container {
+  float: left;
+  width: 125px;
+  padding: 15px;
+  font-size: 25px;
+  text-align: right; }
+  .score-container span {
+    float: left; }
+
+#best-score {
+  position: relative;
+  z-index: 100;
+  box-shadow: 0px 0px 2px 2px rgba(255, 255, 255, 0.5);
+  margin-top: 7px;
+  background-color: white;
+  color: #0e1725; }
+
+#now-score {
+  text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
+  background-color: #0e1725;
+  color: white;
+  margin-top: 2px; }
+
+#grid {
+  float: left;
+  width: 428px;
+  height: 428px;
+  padding: 2px;
+  border: 9px solid #0e1725;
+  margin-top: 25px; }
+
+.tile {
+  display: block;
+  float: left;
+  position: relative;
+  width: 84px;
+  height: 84px;
+  background-color: #0e1725;
+  margin-right: 2px;
+  margin-bottom: 2px; }
+
+.tile:nth-child(5n) {
+  margin-right: 0px; }
+
+p {
+  display: block;
+  float: left;
+  margin-top: 20px;
+  width: 450px;
+  font-size: 20px; }
