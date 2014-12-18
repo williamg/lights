@@ -119,6 +119,12 @@ function handleClick(evt, grid) {
 	var y = (index - x) / grid.size;
 	toggle(grid, x, y);
 	displayGrid(grid);
+
+	// Update scorew
+	var nowScore = document.getElementById("now-score");
+	console.log(nowScore.innerHTML);
+	var currentScore = parseInt(nowScore.innerHTML.substr(17));
+	nowScore.innerHTML = "<span>Now:</span>" + (currentScore + 1);
 }
 
 function toggle(grid, x, y) {
