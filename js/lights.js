@@ -17,7 +17,7 @@ function Tile(x_, y_) {
 
 // Generate a random grid
 function Grid(size) {
-	var DIR_PROB = 0.50;
+	var DIR_PROB = 0.25;
 
 	// Initialize a random directed graph
 	var tiles = [];
@@ -25,33 +25,32 @@ function Grid(size) {
 		tiles[x] = [];
 		for(var y = 0; y < size; y++) {
 			var tile = Tile(x, y);
-
+			
 			var tileUp = y > 0;
 			var tileDown = y < size - 1;
 			var tileLeft = x > 0;
 			var tileRight = x < size - 1;
 
-			// Start with an undirected light
-			tile.up = tileUp;
-			tile.right = tileRight;
-			tile.down = tileDown;
-			tile.left = tileLeft;
-
 			// Randomize directions
 			if(Math.random() < 0.5) {
-				if(Math.random() < DIR_PROB) {
-					tile.up = tile.down = tile.right = false;
-					
-					if(Math.random() < DIR_PROB)
-						tile.right = tileRight;
-				}
+				if(tileLeft && Math.random() < DIR_PROB)
+					tile.left = true;
+
+				if(tileRight && Math.random() < DIR_PROB)
+					tile.right = true;
 			} else {
-				if(Math.random() < DIR_PROB) {
-					tile.left = tile.right = tile.down = false;
-				
-					if(Math.random() < DIR_PROB)
-						tile.down = tileDown;
-				}
+				if(tileUp && Math.random() < DIR_PROB)
+					tile.up = true;
+
+				if(tileDown && Math.random() < DIR_PROB)
+					tile.down = true;
+			}
+
+			if(!tile.up && !tile.down && !tile.left && !tile.right) {
+				tile.up = tileUp;
+				tile.right = tileRight;
+				tile.down = tileDown;
+				tile.left = tileLeft;
 			}
 
 			tiles[x][y] = tile;
@@ -84,6 +83,20 @@ function isSolution(grid, solution) {
 	}
 
 	return true;
+}
+
+function isDirected(tile, size) {
+	var tileUp = tile.pos.y > 0;
+	var tileDown = tile.pos.y < size - 1;
+	var tileLeft = tile.pos.x > 0;
+	var tileRight = tile.pos.x < size - 1;
+
+	var undirected = (tileUp) ? tile.up : true;
+	undirected = undirected && ((tileRight) ? tile.right : true);
+	undirected = undirected && ((tileDown) ? tile.down : true);
+	undirected = undirected && ((tileLeft) ? tile.left : true);
+
+	return !undirected;
 }
 
 // Implementation
@@ -167,17 +180,8 @@ function displayGrid(grid) {
 		if(tile.on)
 			div.className += " on";
 
-		var tileUp = y > 0;
-		var tileDown = y < grid.size - 1;
-		var tileLeft = x > 0;
-		var tileRight = x < grid.size - 1;
-
 		// Determine if this is a directed tile or not (edges make this tricky)
-		var undirected = (tileUp) ? tile.up : !tile.up;
-		undirected = undirected && (tileRight) ? tile.right : !tile.right;
-		undirected = undirected && (tileDown) ? tile.down : !tile.down;
-		undirected = undirected && (tileLeft) ? tile.left : !tile.left
-		if(undirected) continue;
+		if(!isDirected(tile, grid.size)) continue;
 
 		if(tile.left)
 			div.className += " left";
@@ -195,7 +199,6 @@ listenForClicks(grid);
 var solution = unSolve(grid, 10);
 
 if(!isSolution(grid, solution)) console.log("Error! Bad solution!");
-console.log(solution);
 
 displayGrid(grid);
 
