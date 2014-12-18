@@ -87,6 +87,27 @@ function isSolution(grid, solution) {
 }
 
 // Implementation
+function listenForClicks(grid) {
+	var tiles = document.getElementsByClassName("tile");
+	for(var t = 0; t < tiles.length; t++) {
+		var tileDiv = tiles[t];
+		tileDiv.addEventListener("click", function(evt) {
+			handleClick(evt, grid);
+		}, false);
+	}
+}
+
+function handleClick(evt, grid) {
+	var tileDiv = evt.target;
+	var id = tileDiv.id;
+	var index = parseInt(id.substr(1));
+
+	var x = index % grid.size;
+	var y = (index - x) / grid.size;
+	toggle(grid, x, y);
+	displayGrid(grid);
+}
+
 function toggle(grid, x, y) {
 	if(x < 0 || x >= grid.size || y < 0 || y >= grid.size) {
 		console.log("ERROR: Coordinates (" + x + ", " + y + ") out of bounds!");
@@ -141,6 +162,7 @@ function displayGrid(grid) {
 
 		var tile = grid.tiles[x][y];
 		var div = tiles[t];
+		div.className = "tile";
 
 		if(tile.on)
 			div.className += " on";
@@ -169,9 +191,11 @@ function displayGrid(grid) {
 }
 
 var grid = Grid(5);
+listenForClicks(grid);
 var solution = unSolve(grid, 10);
 
 if(!isSolution(grid, solution)) console.log("Error! Bad solution!");
+console.log(solution);
 
 displayGrid(grid);
 
