@@ -13,6 +13,7 @@ $glowColor: transparentize($accentColor, .5);
 @mixin glowBox {
 	position: relative;
 	z-index: 100;
+	background-color: $accentColor;
 	box-shadow: 0px 0px 2px 2px $glowColor;
 }
 
@@ -52,7 +53,6 @@ h1 {
 #best-score {
 	@include glowBox;
 	margin-top: 7px;
-	background-color: $accentColor;
 	color: $darkColor;
 }
 
@@ -83,8 +83,76 @@ h1 {
 	margin-bottom: 2px;
 }
 
+.on {
+	@include glowBox;
+}
+
 .tile:nth-child(5n) {
 	margin-right: 0px;
+}
+
+.left:before, .up:before, .right:after, .down:after {
+	content: ' ';
+	width: 0;
+	height: 0;
+	border: 15px solid transparent;
+	position:absolute;
+}
+
+.left:before {
+	border-right-color: $accentColor;
+	top: 27px;
+	left: 20px;
+}
+
+.on.left:before {
+	border-right-color: $darkColor;
+}
+
+.right:after {
+	border-left-color: $accentColor;
+	top: 27px;
+	right: 20px;
+}
+
+.on.right:after {
+	border-left-color: $darkColor;
+}
+
+.right.left:before {
+	left: 10px;
+}
+
+.right.left:after {
+	right: 10px;
+}
+
+.up:before {
+	border-bottom-color: $accentColor;
+	top: 20px;
+	left: 27px;
+}
+
+.on.up:before {
+	border-bottom-color: $darkColor;
+}
+
+.down:after {
+	border-top-color: $accentColor;
+	bottom: 20px;
+	left: 27px;
+}
+
+.on.down:after {
+	border-top-color: $darkColor;
+}
+
+.up.down:before {
+	top: 10px
+}
+
+.up.down:after {
+	bottom: 10px;
 }
 
 p {
