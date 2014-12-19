@@ -110,11 +110,23 @@ h1 {
   background-color: #0e1725;
   margin-right: 2px;
   margin-bottom: 2px;
+  color: #0e1725;
+  font-size: 65px;
+  text-align: center;
+  line-height: 84px;
   transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   -o-transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   -moz-transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   -webkit-transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   -ms-transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out; }
+
+.twitter {
+  background-image: url("twitter.png");
+  background-size: 100% 100%; }
+
+.facebook {
+  background-image: url("facebook.jpeg");
+  background-size: 100% 100%; }
 
 .tile:before, .tile:after {
   transition: border-color 0.2s ease-in-out;

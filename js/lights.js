@@ -1,8 +1,9 @@
 // GLOBAL VARIABLS
 var GRID_SIZE = 5;
-var SOLUTION_LENGTH = 10;
+var SOLUTION_LENGTH = 1;
 var startingGrid;
 var solution;
+var grid;
 
 // Define some objects
 function Tile(x_, y_) {
@@ -72,7 +73,7 @@ function Grid(size) {
 }
 
 // Utility functions
-function isSolution(grid, solution) {
+function isSolution(solution) {
 	var gridCopy = copyGrid(grid);
 
 	for(var s = 0; s < solution.length; s++) {
@@ -118,15 +119,20 @@ function copyGrid(grid) {
 }
 
 // Implementation
+var handleClickWrapper = function(grid) {
+	return function(evt) {
+		handleClick(evt, grid);
+	}
+}
 function listenForClicks(grid) {
 	var tiles = document.getElementsByClassName("tile");
 	for(var t = 0; t < tiles.length; t++) {
 		var tileDiv = tiles[t];
-		tileDiv.addEventListener("click", function(evt) {
-			handleClick(evt, grid);
-		}, false);
+		tileDiv.addEventListener("click", handleClick, false);
 	}
+}
 
+function bindUtilityButtons() {
 	var resetBtn = document.getElementById("reset");
 	resetBtn.addEventListener("click", function(evt) {
 		grid = reset(grid, startingGrid);
@@ -138,7 +144,7 @@ function listenForClicks(grid) {
 	}, false);
 }
 
-function handleClick(evt, grid) {
+function handleClick(evt) {
 	var tileDiv = evt.target;
 	var id = tileDiv.id;
 	var index = parseInt(id.substr(1));
@@ -152,6 +158,91 @@ function handleClick(evt, grid) {
 	var nowScore = document.getElementById("now-score");
 	var currentScore = parseInt(nowScore.innerHTML.substr(17));
 	setNowScore(currentScore + 1);
+
+	if(isSolved(grid)) {
+		setTimeout(function() {
+			handleWin();
+		}, 200);
+	}
+}
+
+function handleWin() {
+	var tileDivs = document.getElementsByClassName("tile");
+	for(var t = 0; t < tileDivs.length; t++) {
+		tileDivs[t].className = "tile on";
+		tileDivs[t].removeEventListener("click", handleClick, false);
+	}
+
+	fancyFlashEffect();
+	setTimeout(displayWinTiles, 1200);
+}
+
+function offon(tile) {
+	tile.className = "tile";
+
+	setTimeout(function() {
+		tile.className = "tile on";
+	}, 200);
+}
+
+function fancyFlashEffect() {
+	var tileDivs = document.getElementsByClassName("tile");
+
+	for(var y = 0; y < 4*GRID_SIZE; y++) {
+		(function(y) {
+			setTimeout(function() {
+				var boundedY = y % (2 * GRID_SIZE);
+				for(var ty = boundedY; ty >= 0; ty--) {
+					var tx = boundedY - ty;
+					var index = ty * GRID_SIZE + tx;
+
+					if(index >= 0 && index < GRID_SIZE * GRID_SIZE - 1)
+						offon(tileDivs[index]);
+				}
+			}, y * 50);
+		})(y);
+	}
+}
+
+function facebookListener () {
+	var url = "https://facebook.com/dialog/feed?";
+	var appID = "774394885948709";
+	var link = "http://williamg.me";
+	var description = "I turned on all the lights in only 10 moves! Can you beat me?";
+	url += "app_id=" + appID;
+	url += "&redirect_uri=" + link;
+	url += "&description=" + description;
+	url += "&link=" + link;
+
+	window.open(encodeURI(url));
+}
+
+function twitterListener() {
+	var url = "https://twitter.com/share?"
+	var link = "http://williamg.me"
+	var text = "I turned on all the lights in only 10 moves! Can you beat me?";
+	url += "url=" + link;
+	url += "&text=" + text;
+
+	window.open(encodeURI(url));
+}
+
+function displayWinTiles() {
+	var tileDivs = document.getElementsByClassName("tile");
+	tileDivs[6].innerHTML = "Y";
+	tileDivs[7].innerHTML = "O";
+	tileDivs[8].innerHTML = "U";
+	tileDivs[11].innerHTML = "W";
+	tileDivs[12].innerHTML = "I";
+	tileDivs[13].innerHTML = "N";
+	tileDivs[16].className += " twitter";
+	tileDivs[18].className += " facebook";
+
+	var facebook = tileDivs[18];
+	facebook.addEventListener("click", facebookListener, false);
+
+	var twitter = tileDivs[16];
+	twitter.addEventListener("click", twitterListener, false);
 }
 
 function toggle(grid, x, y) {
@@ -184,7 +275,7 @@ function toggle(grid, x, y) {
 	}
 }
 
-function unSolve(grid, numMoves) {
+function unSolve(numMoves) {
 	var moves = [];
 
 	for(var m = 0; m < numMoves; m++) {
@@ -199,7 +290,7 @@ function unSolve(grid, numMoves) {
 	return moves;
 }
 
-function displayGrid(grid) {
+function displayGrid() {
 	var tiles = document.getElementsByClassName('tile');
 
 	for(var t = 0; t < tiles.length; t++) {
@@ -209,6 +300,7 @@ function displayGrid(grid) {
 		var tile = grid.tiles[x][y];
 		var div = tiles[t];
 		div.className = "tile";
+		div.innerHTML = "";
 
 		if(tile.on)
 			div.className += " on";
@@ -228,14 +320,17 @@ function displayGrid(grid) {
 }
 
 function reset(oldGrid, newGrid) {
-	if(newGrid == undefined) {
-		newGrid = Grid(GRID_SIZE);
-		solution = unSolve(newGrid, SOLUTION_LENGTH);
+	grid = newGrid;
+	
+	if(grid == undefined) {
+		grid = Grid(GRID_SIZE);
+		solution = unSolve(SOLUTION_LENGTH);
 	}
 
-	grid = newGrid;
-
+	listenForClicks();
+	
 	var tileDivs = document.getElementsByClassName('tile');
+	
 	for(var t = 0; t < tileDivs.length; t++) {
 		var x = t % grid.size;
 		var y = (t - x) / grid.size;
@@ -245,14 +340,20 @@ function reset(oldGrid, newGrid) {
 		}
 	}
 
+	var facebook = tileDivs[18];
+	facebook.removeEventListener("click", facebookListener, false);
+
+	var twitter = tileDivs[16];
+	twitter.removeEventListener("click", twitterListener, false);
+
+
 	setNowScore(0);
 	setTimeout(displayGrid.bind(this, grid), 200);
 	startingGrid = copyGrid(grid);
 	return grid;
 }
 
-var grid = reset();
-listenForClicks(grid);
+bindUtilityButtons();
+grid = reset();
 
-if(!isSolution(grid, solution)) console.log("Error! Bad solution!");
-
+if(!isSolution(solution)) console.log("Error! Bad solution!");
