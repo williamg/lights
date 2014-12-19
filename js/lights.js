@@ -274,7 +274,7 @@ function facebookListener () {
 function twitterListener() {
 	var url = "https://twitter.com/share?"
 	var link = "http://lights.williamg.me";
-	var text = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me?";
+	var text = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me%3F";
 	url += "url=" + link;
 	url += "&text=" + text;
 
