@@ -142,7 +142,7 @@ function getBestScoreCookie() {
 	console.log(document.cookie);
 	if(document.cookie != "") {
 		var bestScoreStr = "bestScore=";
-		var scoreStr = document.cookie.substring(bestScoreStr.length, document.cookie.length-1);
+		var scoreStr = document.cookie.substr(bestScoreStr.length);
 		var score = parseInt(scoreStr);
 		return score;
 	}
