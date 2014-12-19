@@ -257,7 +257,7 @@ function fancyFlashEffect() {
 function facebookListener () {
 	var url = "https://facebook.com/dialog/feed?";
 	var appID = "774394885948709";
-	var link = "http://williamg.me/lights";
+	var link = "lights.williamg.me";
 	var picture = "http://williamg.github.io/lights/style/lights.png"
 	var name = "Play lights!";
 	var description = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me?";
@@ -273,7 +273,7 @@ function facebookListener () {
 
 function twitterListener() {
 	var url = "https://twitter.com/share?"
-	var link = "http://williamg.me/lights"
+	var link = "lights.williamg.me";
 	var text = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me?";
 	url += "url=" + link;
 	url += "&text=" + text;
