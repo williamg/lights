@@ -251,13 +251,15 @@ function facebookListener () {
 	var url = "https://facebook.com/dialog/feed?";
 	var appID = "774394885948709";
 	var link = "http://williamg.me/lights";
-	var picture = "http://williamg.github.io/style/grid.png"
-	var description = "I turned on all the lights in only 10 moves! Can you beat me?";
+	var picture = "http://williamg.github.io/lights/style/lights.png"
+	var name = "Play lights!";
+	var description = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me?";
 	url += "app_id=" + appID;
 	url += "&redirect_uri=" + link;
 	url += "&description=" + description;
 	url += "&link=" + link;
 	url += "&picture=" + picture;
+	url += "&name=" + name;
 
 	window.open(encodeURI(url));
 }
@@ -265,7 +267,7 @@ function facebookListener () {
 function twitterListener() {
 	var url = "https://twitter.com/share?"
 	var link = "http://williamg.me/lights"
-	var text = "I turned on all the lights in only 10 moves! Can you beat me?";
+	var text = "I turned on all the lights in only " + getNowScore() + "  moves! Can you beat me?";
 	url += "url=" + link;
 	url += "&text=" + text;
 
