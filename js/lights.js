@@ -146,7 +146,6 @@ function copyGrid(grid) {
 // COOOOOOOOOKIE crisp
 function getBestScoreCookie() {
 	// Assuming we only store one cookie
-	console.log(document.cookie);
 	if(document.cookie != "") {
 		var bestScoreStr = "bestScore=";
 		var scoreStr = document.cookie.substr(bestScoreStr.length);
