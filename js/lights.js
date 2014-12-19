@@ -1,6 +1,8 @@
-// GLOBAL VARIABLS
+// GLOBAL VARIABLES
 var GRID_SIZE = 5;
 var SOLUTION_LENGTH = 17;
+var DIR_PROB = 0.25;
+
 var startingGrid;
 var solution;
 var grid;
@@ -24,21 +26,24 @@ function Tile(x_, y_) {
 
 // Generate a random grid
 function Grid(size) {
-	var DIR_PROB = 0.25;
-
 	// Initialize a random directed graph
 	var tiles = [];
+
 	for(var x = 0; x < size; x++) {
 		tiles[x] = [];
+
 		for(var y = 0; y < size; y++) {
 			var tile = Tile(x, y);
-			
+
 			var tileUp = y > 0;
 			var tileDown = y < size - 1;
 			var tileLeft = x > 0;
 			var tileRight = x < size - 1;
 
 			// Randomize directions
+			// Tiles can only control the lights on the left/right OR up/down
+			// This is exclusively for design reasons. Too many different directions
+			// looks cluttered.
 			if(Math.random() < 0.5) {
 				if(tileLeft && Math.random() < DIR_PROB)
 					tile.left = true;
@@ -53,6 +58,8 @@ function Grid(size) {
 					tile.down = true;
 			}
 
+			// If we didn't assign any directions, then it's a normal lights and
+			// controls all 4 adjacent tiles
 			if(!tile.up && !tile.down && !tile.left && !tile.right) {
 				tile.up = tileUp;
 				tile.right = tileRight;
@@ -196,6 +203,7 @@ function handleClick(evt) {
 	setNowScore(getNowScore() + 1);
 
 	if(isSolved(grid)) {
+		// Delayed to let animations finish
 		setTimeout(function() {
 			handleWin();
 		}, 200);
@@ -324,11 +332,17 @@ function toggle(grid, x, y) {
 
 function unSolve(numMoves) {
 	var moves = [];
+	var choices = [];
+
+	for(var c = 0; c < GRID_SIZE * GRID_SIZE; c++)
+		choices.push(c);
 
 	for(var m = 0; m < numMoves; m++) {
 		// Generate random place
-		var x = Math.floor(Math.random() * grid.size);
-		var y = Math.floor(Math.random() * grid.size);
+		var index = Math.floor(Math.random() * (GRID_SIZE * GRID_SIZE - m));
+		var tile = choices.splice(index, 1);
+		var x = tile % GRID_SIZE;
+		var y = (tile - x) / GRID_SIZE;
 		toggle(grid, x, y);
 
 		moves[numMoves - m - 1] = {x: x, y: y};
@@ -372,6 +386,9 @@ function reset(oldGrid, newGrid) {
 	if(grid == undefined) {
 		grid = Grid(GRID_SIZE);
 		solution = unSolve(SOLUTION_LENGTH);
+
+		// Sanity check
+		if(!isSolution(solution)) console.log("Error! Bad solution!");
 	}
 
 	listenForClicks();
@@ -400,13 +417,16 @@ function reset(oldGrid, newGrid) {
 	return grid;
 }
 
+// Update cookie
 var bestScore = getBestScoreCookie();
 setBestScoreCookie(bestScore);
 
+// Set best score box
 if(isNaN(bestScore)) setBestScore("--");
 else setBestScore(bestScore);
 
+// Set up "Reset" and "New Grid" buttons
 bindUtilityButtons();
-grid = reset();
 
-if(!isSolution(solution)) console.log("Error! Bad solution!");
+// Generate and display the grid
+grid = reset();
