@@ -146,11 +146,16 @@ function copyGrid(grid) {
 // COOOOOOOOOKIE crisp
 function getBestScoreCookie() {
 	// Assuming we only store one cookie
-	if(document.cookie != "") {
-		var bestScoreStr = "bestScore=";
-		var scoreStr = document.cookie.substr(bestScoreStr.length);
-		var score = parseInt(scoreStr);
-		return score;
+	var ca = document.cookie.split(";");
+	var bestScoreStr = "bestScore=";
+	for(var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		while(c.charAt(0) == ' ') c = c.substring(1);
+		if(c.indexOf(bestScoreStr) == 0)  {
+			var scoreStr = c.substr(bestScoreStr.length);
+			var score = parseInt(scoreStr);
+			return score;
+		}
 	}
 
 	return Math.NaN;
