@@ -423,6 +423,10 @@ function reset(oldGrid, newGrid) {
 	return grid;
 }
 
+// We only want this page accessed via lights.williamg.me:
+if(window.location.href.indexOf("github.io") >= 0)
+	window.location.replace("http://lights.williamg.me");
+
 // Update cookie
 var bestScore = getBestScoreCookie();
 setBestScoreCookie(bestScore);
