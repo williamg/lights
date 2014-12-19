@@ -266,6 +266,7 @@ function facebookListener () {
 	var picture = "http://williamg.github.io/lights/style/lights.png"
 	var name = "Play lights!";
 	var description = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me?";
+	description = encodeURIComponent(description);
 	url += "app_id=" + appID;
 	url += "&redirect_uri=" + link;
 	url += "&description=" + description;
@@ -273,17 +274,18 @@ function facebookListener () {
 	url += "&picture=" + picture;
 	url += "&name=" + name;
 
-	window.open(encodeURI(url));
+	window.open(url);
 }
 
 function twitterListener() {
 	var url = "https://twitter.com/share?"
 	var link = "http://lights.williamg.me";
-	var text = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me%3F";
-	url += "url=" + link;
-	url += "&text=" + text;
+	var text = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me?";
+	text = encodeURIComponent(text);
+	url += "text=" + text;
+	url += "&url=" + link;
 
-	window.open(encodeURI(url));
+	window.open(url);
 }
 
 function displayWinTiles() {
