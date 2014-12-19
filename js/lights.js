@@ -1,6 +1,6 @@
 // GLOBAL VARIABLS
 var GRID_SIZE = 5;
-var SOLUTION_LENGTH = 1;
+var SOLUTION_LENGTH = 2;
 var startingGrid;
 var solution;
 var grid;
