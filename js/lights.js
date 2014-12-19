@@ -108,6 +108,24 @@ function isDirected(tile, size) {
 	return !undirected;
 }
 
+function getBestScore() {
+	var bestScore = document.getElementById("best-score");
+	var score = parseInt(bestScore.innerHTML.substr(18));
+	return score;
+
+}
+
+function setBestScore(score) {
+	var bestScore = document.getElementById("best-score");
+	bestScore.innerHTML = "<span>Best:</span>" + score;
+}
+
+function getNowScore() {
+	var nowScore = document.getElementById("now-score");
+	var score = parseInt(nowScore.innerHTML.substr(17));
+	return score;
+}
+
 function setNowScore(score) {
 	var nowScore = document.getElementById("now-score");
 	nowScore.innerHTML = "<span>Now:</span>" + score;
@@ -116,6 +134,25 @@ function setNowScore(score) {
 function copyGrid(grid) {
 	// This is dirty
 	return JSON.parse(JSON.stringify(grid));
+}
+
+// COOOOOOOOOKIE crisp
+function getBestScoreCookie() {
+	// Assuming we only store one cookie
+	if(document.cookie) {
+		var bestScoreStr = "bestScore=";
+		var scoreStr = document.cookie.substring(bestScoreStr.length, document.cookie.length-1);
+		var score = parseInt(scoreStr);
+		return score;
+	}
+
+	return Math.NaN;
+}
+
+function setBestScoreCookie(bestScore) {
+	var d = new Date();
+	d.setTime(d.getTime() + (100 * 24 * 60 * 60 * 1000));
+	document.cookie = "bestScore=" + bestScore + "; expires=" + d.toUTCString();
 }
 
 // Implementation
@@ -155,9 +192,7 @@ function handleClick(evt) {
 	displayGrid(grid);
 
 	// Update score
-	var nowScore = document.getElementById("now-score");
-	var currentScore = parseInt(nowScore.innerHTML.substr(17));
-	setNowScore(currentScore + 1);
+	setNowScore(getNowScore() + 1);
 
 	if(isSolved(grid)) {
 		setTimeout(function() {
@@ -175,6 +210,13 @@ function handleWin() {
 
 	fancyFlashEffect();
 	setTimeout(displayWinTiles, 1200);
+
+	var bestScore = getBestScoreCookie();
+	var nowScore = getNowScore();
+	if (isNaN(bestScore) || nowScore < bestScore) {
+		setBestScore(nowScore);
+		setBestScoreCookie(nowScore);
+	}
 }
 
 function offon(tile) {
@@ -352,6 +394,12 @@ function reset(oldGrid, newGrid) {
 	startingGrid = copyGrid(grid);
 	return grid;
 }
+
+var bestScore = getBestScoreCookie();
+setBestScoreCookie(bestScore);
+
+if(isNaN(bestScore)) setBestScore("--");
+else setBestScore(bestScore);
 
 bindUtilityButtons();
 grid = reset();
