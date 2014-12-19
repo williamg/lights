@@ -1,3 +1,9 @@
+// GLOBAL VARIABLS
+var GRID_SIZE = 5;
+var SOLUTION_LENGTH = 10;
+var startingGrid;
+var solution;
+
 // Define some objects
 function Tile(x_, y_) {
 	var tile = {
@@ -67,18 +73,20 @@ function Grid(size) {
 
 // Utility functions
 function isSolution(grid, solution) {
-	// Create a copy of the grid. This feels dirty
-	var gridCopy = JSON.parse(JSON.stringify(grid));
+	var gridCopy = copyGrid(grid);
 
 	for(var s = 0; s < solution.length; s++) {
 		var x = solution[s].x;
 		var y = solution[s].y;
 		toggle(gridCopy, x, y);
 	}
+	return isSolved(gridCopy);
+}
 
-	for(var x = 0; x < gridCopy.size; x++) {
-		for(var y = 0; y < gridCopy.size; y++) {
-			if(!gridCopy.tiles[x][y].on) return false;
+function isSolved(grid) {
+	for(var x = 0; x < grid.size; x++) {
+		for(var y = 0; y < grid.size; y++) {
+			if(!grid.tiles[x][y].on) return false;
 		}
 	}
 
@@ -99,6 +107,16 @@ function isDirected(tile, size) {
 	return !undirected;
 }
 
+function setNowScore(score) {
+	var nowScore = document.getElementById("now-score");
+	nowScore.innerHTML = "<span>Now:</span>" + score;
+}
+
+function copyGrid(grid) {
+	// This is dirty
+	return JSON.parse(JSON.stringify(grid));
+}
+
 // Implementation
 function listenForClicks(grid) {
 	var tiles = document.getElementsByClassName("tile");
@@ -108,6 +126,16 @@ function listenForClicks(grid) {
 			handleClick(evt, grid);
 		}, false);
 	}
+
+	var resetBtn = document.getElementById("reset");
+	resetBtn.addEventListener("click", function(evt) {
+		grid = reset(grid, startingGrid);
+	}, false);
+
+	var newGridBtn = document.getElementById("new");
+	newGridBtn.addEventListener("click", function(evt) {
+		grid = reset(grid);
+	}, false);
 }
 
 function handleClick(evt, grid) {
@@ -120,11 +148,10 @@ function handleClick(evt, grid) {
 	toggle(grid, x, y);
 	displayGrid(grid);
 
-	// Update scorew
+	// Update score
 	var nowScore = document.getElementById("now-score");
-	console.log(nowScore.innerHTML);
 	var currentScore = parseInt(nowScore.innerHTML.substr(17));
-	nowScore.innerHTML = "<span>Now:</span>" + (currentScore + 1);
+	setNowScore(currentScore + 1);
 }
 
 function toggle(grid, x, y) {
@@ -200,11 +227,32 @@ function displayGrid(grid) {
 	}
 }
 
-var grid = Grid(5);
+function reset(oldGrid, newGrid) {
+	if(newGrid == undefined) {
+		newGrid = Grid(GRID_SIZE);
+		solution = unSolve(newGrid, SOLUTION_LENGTH);
+	}
+
+	grid = newGrid;
+
+	var tileDivs = document.getElementsByClassName('tile');
+	for(var t = 0; t < tileDivs.length; t++) {
+		var x = t % grid.size;
+		var y = (t - x) / grid.size;
+
+		if(oldGrid == undefined || !oldGrid.tiles[x][y].on) {
+			tileDivs[t].className += " on";
+		}
+	}
+
+	setNowScore(0);
+	setTimeout(displayGrid.bind(this, grid), 200);
+	startingGrid = copyGrid(grid);
+	return grid;
+}
+
+var grid = reset();
 listenForClicks(grid);
-var solution = unSolve(grid, 10);
 
 if(!isSolution(grid, solution)) console.log("Error! Bad solution!");
-
-displayGrid(grid);
 
