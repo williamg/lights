@@ -1,6 +1,6 @@
 // GLOBAL VARIABLS
 var GRID_SIZE = 5;
-var SOLUTION_LENGTH = 2;
+var SOLUTION_LENGTH = 17;
 var startingGrid;
 var solution;
 var grid;
@@ -251,11 +251,13 @@ function facebookListener () {
 	var url = "https://facebook.com/dialog/feed?";
 	var appID = "774394885948709";
 	var link = "http://williamg.me/lights";
+	var picture = "http://williamg.github.io/style/grid.png"
 	var description = "I turned on all the lights in only 10 moves! Can you beat me?";
 	url += "app_id=" + appID;
 	url += "&redirect_uri=" + link;
 	url += "&description=" + description;
 	url += "&link=" + link;
+	url += "&picture=" + picture;
 
 	window.open(encodeURI(url));
 }
