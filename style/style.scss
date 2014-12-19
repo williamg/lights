@@ -81,6 +81,14 @@ h1 {
 	background-color: $darkColor;
 }
 
+.button:hover {
+	cursor: pointer;
+}
+
+.tile:hover {
+	cursor: pointer;
+}
+
 #reset {
 	margin-right: 4px;
 }
@@ -210,5 +218,4 @@ p {
 	margin-top: 20px;
 	width: 450px;
 	font-size: 20px;
-	line-height: 25px;
 }
