@@ -268,7 +268,7 @@ function facebookListener () {
 	var description = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me?";
 	description = encodeURIComponent(description);
 	url += "app_id=" + appID;
-	url += "&redirect_uri=" + link;
+	url += "&redirect_uri=http://facebook.com";
 	url += "&description=" + description;
 	url += "&link=" + link;
 	url += "&picture=" + picture;
