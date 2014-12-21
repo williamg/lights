@@ -200,6 +200,10 @@ h1 {
 .up.down:after {
   bottom: 10px; }
 
+p:first-of-type {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #FFF; }
+
 p {
   display: block;
   float: left;
@@ -207,6 +211,10 @@ p {
   width: 450px;
   font-size: 20px;
   line-height: 25px; }
+
+form {
+  margin: 20px 0px 0px 185px;
+  float: none; }
 
 #copy {
   float: left;

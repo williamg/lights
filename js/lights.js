@@ -262,7 +262,7 @@ function fancyFlashEffect() {
 function facebookListener () {
 	var url = "https://facebook.com/dialog/feed?";
 	var appID = "774394885948709";
-	var link = "http://lights.williamg.me";
+	var link = "http://williamg.me/lights";
 	var picture = "http://williamg.github.io/lights/style/lights.png"
 	var name = "Play lights!";
 	var description = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me?";
@@ -279,7 +279,7 @@ function facebookListener () {
 
 function twitterListener() {
 	var url = "https://twitter.com/share?"
-	var link = "http://lights.williamg.me";
+	var link = "http://williamg.me/lights";
 	var text = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me?";
 	text = encodeURIComponent(text);
 	url += "text=" + text;
@@ -423,9 +423,9 @@ function reset(oldGrid, newGrid) {
 	return grid;
 }
 
-// We only want this page accessed via lights.williamg.me:
-if(window.location.href.indexOf("github.io") >= 0)
-	window.location.replace("http://lights.williamg.me");
+// We only want this page accessed via williamg.me/lights
+if(window.location.href.indexOf("lights.williamg.me") >= 0)
+	window.location.replace("http://williamg.me/lights");
 
 // Update cookie
 var bestScore = getBestScoreCookie();
