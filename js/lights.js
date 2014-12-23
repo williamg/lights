@@ -6,6 +6,7 @@ var DIR_PROB = 0.25;
 var startingGrid;
 var solution;
 var grid;
+var cookies = ["bestScore", "tutorialFinished"];
 
 // Define some objects
 function Tile(x_, y_) {
@@ -25,7 +26,9 @@ function Tile(x_, y_) {
 }
 
 // Generate a random grid
-function Grid(size) {
+function Grid(size, prob) {
+	prob = (prob == undefined ? DIR_PROB : prob);
+
 	// Initialize a random directed graph
 	var tiles = [];
 
@@ -45,16 +48,16 @@ function Grid(size) {
 			// This is exclusively for design reasons. Too many different directions
 			// looks cluttered.
 			if(Math.random() < 0.5) {
-				if(tileLeft && Math.random() < DIR_PROB)
+				if(tileLeft && Math.random() < prob)
 					tile.left = true;
 
-				if(tileRight && Math.random() < DIR_PROB)
+				if(tileRight && Math.random() < prob)
 					tile.right = true;
 			} else {
-				if(tileUp && Math.random() < DIR_PROB)
+				if(tileUp && Math.random() < prob)
 					tile.up = true;
 
-				if(tileDown && Math.random() < DIR_PROB)
+				if(tileDown && Math.random() < prob)
 					tile.down = true;
 			}
 
@@ -144,53 +147,43 @@ function copyGrid(grid) {
 }
 
 // COOOOOOOOOKIE crisp
-function getBestScoreCookie() {
+function getCookie(cookieStr) {
 	// Assuming we only store one cookie
 	var ca = document.cookie.split(";");
-	var bestScoreStr = "bestScore=";
+	var name = cookieStr + "=";
 	for(var i = 0; i < ca.length; i++) {
 		var c = ca[i];
 		while(c.charAt(0) == ' ') c = c.substring(1);
-		if(c.indexOf(bestScoreStr) == 0)  {
-			var scoreStr = c.substr(bestScoreStr.length);
-			var score = parseInt(scoreStr);
-			return score;
+		if(c.indexOf(name) == 0)  {
+			var value = c.substr(name.length);
+			return value;
 		}
 	}
 
-	return Math.NaN;
+	return undefined;
 }
 
-function setBestScoreCookie(bestScore) {
+function setCookie(name, value) {
 	var d = new Date();
 	d.setTime(d.getTime() + (100 * 24 * 60 * 60 * 1000));
-	document.cookie = "bestScore=" + bestScore + "; expires=" + d.toUTCString();
+	document.cookie = name + "=" + value + "; expires=" + d.toUTCString();
 }
 
-// Implementation
-var handleClickWrapper = function(grid) {
-	return function(evt) {
-		handleClick(evt, grid);
-	}
+function refreshCookie(name) {
+	var value = getCookie(name);
+	if(value !== undefined)
+		setCookie(name, value);
 }
+
 function listenForClicks(grid) {
 	var tiles = document.getElementsByClassName("tile");
 	for(var t = 0; t < tiles.length; t++) {
 		var tileDiv = tiles[t];
+		
+		// We remove it to make sure we only have 1 event listener at a time
+		tileDiv.removeEventListener("click", handleClick, false);
 		tileDiv.addEventListener("click", handleClick, false);
 	}
-}
-
-function bindUtilityButtons() {
-	var resetBtn = document.getElementById("reset");
-	resetBtn.addEventListener("click", function(evt) {
-		grid = reset(grid, startingGrid);
-	}, false);
-
-	var newGridBtn = document.getElementById("new");
-	newGridBtn.addEventListener("click", function(evt) {
-		grid = reset(grid);
-	}, false);
 }
 
 function handleClick(evt) {
@@ -212,98 +205,6 @@ function handleClick(evt) {
 			handleWin();
 		}, 200);
 	}
-}
-
-function handleWin() {
-	var tileDivs = document.getElementsByClassName("tile");
-	for(var t = 0; t < tileDivs.length; t++) {
-		tileDivs[t].className = "tile on";
-		tileDivs[t].removeEventListener("click", handleClick, false);
-	}
-
-	fancyFlashEffect();
-	setTimeout(displayWinTiles, 1200);
-
-	var bestScore = getBestScoreCookie();
-	var nowScore = getNowScore();
-	if (isNaN(bestScore) || nowScore < bestScore) {
-		setBestScore(nowScore);
-		setBestScoreCookie(nowScore);
-	}
-}
-
-function offon(tile) {
-	tile.className = "tile";
-
-	setTimeout(function() {
-		tile.className = "tile on";
-	}, 200);
-}
-
-function fancyFlashEffect() {
-	var tileDivs = document.getElementsByClassName("tile");
-
-	for(var y = 0; y < 4*GRID_SIZE; y++) {
-		(function(y) {
-			setTimeout(function() {
-				var boundedY = y % (2 * GRID_SIZE);
-				for(var ty = boundedY; ty >= 0; ty--) {
-					var tx = boundedY - ty;
-					var index = ty * GRID_SIZE + tx;
-
-					if(index >= 0 && index < GRID_SIZE * GRID_SIZE - 1)
-						offon(tileDivs[index]);
-				}
-			}, y * 50);
-		})(y);
-	}
-}
-
-function facebookListener () {
-	var url = "https://facebook.com/dialog/feed?";
-	var appID = "774394885948709";
-	var link = "http://williamg.me/lights";
-	var picture = "http://williamg.github.io/lights/style/lights.png"
-	var name = "Play lights!";
-	var description = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me?";
-	description = encodeURIComponent(description);
-	url += "app_id=" + appID;
-	url += "&redirect_uri=http://facebook.com";
-	url += "&description=" + description;
-	url += "&link=" + link;
-	url += "&picture=" + picture;
-	url += "&name=" + name;
-
-	window.open(url);
-}
-
-function twitterListener() {
-	var url = "https://twitter.com/share?"
-	var link = "http://williamg.me/lights";
-	var text = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me?";
-	text = encodeURIComponent(text);
-	url += "text=" + text;
-	url += "&url=" + link;
-
-	window.open(url);
-}
-
-function displayWinTiles() {
-	var tileDivs = document.getElementsByClassName("tile");
-	tileDivs[6].innerHTML = "Y";
-	tileDivs[7].innerHTML = "O";
-	tileDivs[8].innerHTML = "U";
-	tileDivs[11].innerHTML = "W";
-	tileDivs[12].innerHTML = "I";
-	tileDivs[13].innerHTML = "N";
-	tileDivs[16].className += " twitter";
-	tileDivs[18].className += " facebook";
-
-	var facebook = tileDivs[18];
-	facebook.addEventListener("click", facebookListener, false);
-
-	var twitter = tileDivs[16];
-	twitter.addEventListener("click", twitterListener, false);
 }
 
 function toggle(grid, x, y) {
@@ -336,7 +237,7 @@ function toggle(grid, x, y) {
 	}
 }
 
-function unSolve(numMoves) {
+function unsolve(grid, numMoves) {
 	var moves = [];
 	var choices = [];
 
@@ -385,58 +286,89 @@ function displayGrid() {
 			div.className += " down";
 	}
 }
-
 function reset(oldGrid, newGrid) {
 	grid = newGrid;
 	
 	if(grid == undefined) {
 		grid = Grid(GRID_SIZE);
-		solution = unSolve(SOLUTION_LENGTH);
+		solution = unsolve(grid, SOLUTION_LENGTH);
 
 		// Sanity check
 		if(!isSolution(solution)) console.log("Error! Bad solution!");
 	}
 
-	listenForClicks();
-	
 	var tileDivs = document.getElementsByClassName('tile');
 	
 	for(var t = 0; t < tileDivs.length; t++) {
 		var x = t % grid.size;
 		var y = (t - x) / grid.size;
 
-		if(oldGrid == undefined || !oldGrid.tiles[x][y].on) {
+		if(oldGrid === undefined || !oldGrid.tiles[x][y].on) {
 			tileDivs[t].className += " on";
 		}
 	}
 
-	var facebook = tileDivs[18];
-	facebook.removeEventListener("click", facebookListener, false);
-
-	var twitter = tileDivs[16];
-	twitter.removeEventListener("click", twitterListener, false);
-
-
 	setNowScore(0);
 	setTimeout(displayGrid.bind(this, grid), 200);
 	startingGrid = copyGrid(grid);
+	handleReset();
 	return grid;
 }
 
-// We only want this page accessed via williamg.me/lights
-if(window.location.href.indexOf("lights.williamg.me") >= 0)
-	window.location.replace("http://williamg.me/lights");
+function offon(tile) {
+	tile.className = "tile";
 
-// Update cookie
-var bestScore = getBestScoreCookie();
-setBestScoreCookie(bestScore);
+	setTimeout(function() {
+		tile.className = "tile on";
+	}, 200);
+}
 
-// Set best score box
-if(isNaN(bestScore)) setBestScore("--");
-else setBestScore(bestScore);
+function fancyFlashEffect() {
+	var tileDivs = document.getElementsByClassName("tile");
 
-// Set up "Reset" and "New Grid" buttons
-bindUtilityButtons();
+	for(var y = 0; y < 4*GRID_SIZE; y++) {
+		(function(y) {
+			setTimeout(function() {
+				var boundedY = y % (2 * GRID_SIZE);
+				for(var ty = boundedY; ty >= 0; ty--) {
+					var tx = boundedY - ty;
+					var index = ty * GRID_SIZE + tx;
 
-// Generate and display the grid
-grid = reset();
+					if(index >= 0 && index < GRID_SIZE * GRID_SIZE - 1)
+						offon(tileDivs[index]);
+				}
+			}, y * 50);
+		})(y);
+	}
+}
+
+
+
+function offon(tile) {
+	tile.className = "tile";
+
+	setTimeout(function() {
+		tile.className = "tile on";
+	}, 200);
+}
+
+function fancyFlashEffect() {
+	var tileDivs = document.getElementsByClassName("tile");
+
+	for(var y = 0; y < 4*GRID_SIZE; y++) {
+		(function(y) {
+			setTimeout(function() {
+				var boundedY = y % (2 * GRID_SIZE);
+				for(var ty = boundedY; ty >= 0; ty--) {
+					var tx = boundedY - ty;
+					var index = ty * GRID_SIZE + tx;
+
+					if(index >= 0 && index < GRID_SIZE * GRID_SIZE - 1)
+						offon(tileDivs[index]);
+				}
+			}, y * 50);
+		})(y);
+	}
+}
+
+
