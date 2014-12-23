@@ -108,6 +108,13 @@ var bestScore = getCookie("bestScore");
 if(bestScore === undefined) setBestScore("--");
 else setBestScore(bestScore);
 
+var tutorial = getCookie("tutorial");
+if((tutorial == "no" || tutorial === undefined) && bestScore === undefined) {
+	window.location.href = "http://williamg.me/lights/tutorial.html";
+} else {
+	setCookie("tutorial", "yes");
+}
+
 // Set up "Reset" and "New Grid" buttons
 bindUtilityButtons();
 
