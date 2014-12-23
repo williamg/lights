@@ -30,7 +30,7 @@ function bindUtilityButtons() {
 	var skipTutorial = document.getElementById("skip");
 	skipTutorial.addEventListener("click", function(evt) {
 		setCookie("tutorial", "yes");
-		window.open("http://williamg.me/lights");
+		window.location.href = "http://williamg.me/lights";
 	}, false);
 }
 
