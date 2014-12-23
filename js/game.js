@@ -30,7 +30,7 @@ function handleWin() {
 	}
 
 	fancyFlashEffect();
-	setTimeout(displayWinTiles, 1200);
+	setTimeout(displayWinScreen, 1200);
 
 	var bestScore = getCookie("bestScore");
 	var nowScore = getNowScore();
@@ -40,7 +40,7 @@ function handleWin() {
 	}
 }
 
-function facebookListener () {
+function facebookURL () {
 	var url = "https://facebook.com/dialog/feed?";
 	var appID = "774394885948709";
 	var link = "http://williamg.me/lights";
@@ -54,46 +54,55 @@ function facebookListener () {
 	url += "&link=" + link;
 	url += "&picture=" + picture;
 	url += "&name=" + name;
-
-	window.open(url);
+	return url;
 }
 
-function twitterListener() {
+function twitterURL() {
 	var url = "https://twitter.com/share?"
 	var link = "http://williamg.me/lights";
 	var text = "I turned on all the lights in only " + getNowScore() + " moves! Can you beat me?";
 	text = encodeURIComponent(text);
 	url += "text=" + text;
 	url += "&url=" + link;
-
-	window.open(url);
+	return url;
 }
 
-function displayWinTiles() {
-	var tileDivs = document.getElementsByClassName("tile");
-	tileDivs[6].innerHTML = "Y";
-	tileDivs[7].innerHTML = "O";
-	tileDivs[8].innerHTML = "U";
-	tileDivs[11].innerHTML = "W";
-	tileDivs[12].innerHTML = "I";
-	tileDivs[13].innerHTML = "N";
-	tileDivs[16].className += " twitter";
-	tileDivs[18].className += " facebook";
+function displayWinScreen() {
+	var overlay = document.getElementById("overlay");
+	overlay.innerHTML = '';
+	overlay.innerHTML += '<span>You win!</span>\n';
+	overlay.innerHTML += '<div id="button-wrapper">\n\t';
+	overlay.innerHTML += '</div>';
 
-	var facebook = tileDivs[18];
-	facebook.addEventListener("click", facebookListener, false);
+	var wrapper = document.getElementById("button-wrapper");
+	wrapper.innerHTML = '';
 
-	var twitter = tileDivs[16];
-	twitter.addEventListener("click", twitterListener, false);
+	wrapper.innerHTML += '<a target="_blank" id="facebook" href="' + facebookURL() + '" class="overlay-button">Share on Facebook</a>\n\t';
+	wrapper.innerHTML += '<a target="_blank" id="twitter" href="' + twitterURL() + '" class="overlay-button">Share on Twitter</a>\n\t';
+	wrapper.innerHTML += '<a id="playAgain" href="#" class="overlay-button">Play Again!</a>\n';
+
+	var facebook = document.getElementById("facebook");
+	facebook.addEventListener("click", function() {
+		ga('send', 'event', 'social', 'facbeook');
+	}, false);
+
+	var twitter = document.getElementById("twitter");
+	twitter.addEventListener("click", function() {
+		ga('send', 'event', 'social', 'twitter');
+	}, false);
+
+	var replay = document.getElementById("playAgain");
+	replay.addEventListener("click", function() {
+		overlay.className = "hidden";
+		reset(grid);
+	}, false);
+
+	overlay.className = "";
 }
 
 function handleReset() {
-	var tileDivs = document.getElementsByClassName("tile");
-	var facebook = tileDivs[18];
-	facebook.removeEventListener("click", facebookListener, false);
-
-	var twitter = tileDivs[16];
-	twitter.removeEventListener("click", twitterListener, false);
+	var overlay = document.getElementById("overlay");
+	overlay.className = "hidden";
 
 	listenForClicks();
 }
@@ -118,7 +127,7 @@ else setBestScore(bestScore);
 
 var tutorial = getCookie("tutorial");
 if((tutorial == "no" || tutorial === undefined) && bestScore === undefined) {
-	window.location.href = "http://williamg.me/lights/tutorial.html";
+//	window.location.href = "http://williamg.me/lights/tutorial.html";
 } else {
 	setCookie("tutorial", "yes");
 }

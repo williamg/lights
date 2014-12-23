@@ -123,7 +123,7 @@ function showStep() {
 			var instructions = "This one may be a bit more challenging.";
 			changeInstructions(instructions);
 			var newGrid = Grid(GRID_SIZE, 0);
-			unsolve(newGrid, 7);
+			unsolve(newGrid, 6);
 			reset(grid, newGrid);
 			listenForClicks();
 			break;
@@ -176,11 +176,28 @@ function handleWin() {
 		var skip = document.getElementById("skip");
 		skip.innerHTML = "Play Lights!";
 		setCookie("tutorial", "yes");
-		nextStep();
+		setTimeout(displayCompleteScreen, 1200);
 	}
 }
 
-function handleReset() {}
+function displayCompleteScreen() {
+	var overlay = document.getElementById("overlay");
+	overlay.innerHTML = '';
+	overlay.innerHTML += '<span>Tutorial complete!</span>\n';
+	overlay.innerHTML += '<div id="button-wrapper">\n\t';
+	overlay.innerHTML += '</div>';
+
+	var wrapper = document.getElementById("button-wrapper");
+	wrapper.innerHTML = '';
+
+	wrapper.innerHTML += '<a href="http://williamg.me/lights" class="overlay-button">Play Lights!</a>\n';
+	overlay.className = "";
+}
+
+function handleReset() {
+	var overlay = document.getElementById("overlay");
+	overlay.className = "hidden";
+}
 
 // We only want this page accessed via williamg.me/lights
 if(window.location.href.indexOf("lights.williamg.me") >= 0)

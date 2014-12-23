@@ -40,6 +40,9 @@ html {
   color: white;
   font-family: "Cabin Condensed", Futura, "sans-serif"; }
 
+.hidden {
+  visibility: hidden; }
+
 #wrapper {
   width: 450px;
   margin: 100px auto 0px auto; }
@@ -61,9 +64,10 @@ h1 {
 
 #best-score {
   position: relative;
-  z-index: 100;
+  z-index: 90;
   background-color: white;
   box-shadow: 0px 0px 2px 2px rgba(255, 255, 255, 0.5);
+  color: #0e1725;
   margin-top: 7px;
   color: #0e1725; }
 
@@ -106,6 +110,55 @@ h1 {
   border: 9px solid #0e1725;
   margin-top: 10px; }
 
+#overlay {
+  position: relative;
+  float: none;
+  top: -3px;
+  left: -3px;
+  width: 434px;
+  height: 434px;
+  background-color: rgba(14, 23, 37, 0.95);
+  z-index: 100; }
+
+#overlay span {
+  text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
+  display: block;
+  position: absolute;
+  left: 0px;
+  top: 100px;
+  float: none;
+  width: 100%;
+  font-size: 40px;
+  color: white;
+  text-align: center; }
+
+#button-wrapper {
+  position: absolute;
+  left: 0px;
+  top: 160px;
+  width: 100%; }
+
+.overlay-button {
+  display: block;
+  width: 200px;
+  height: 35px;
+  line-height: 35px;
+  position: relative;
+  margin: 10px  auto 0px auto;
+  padding: 5px;
+  font-size: 20px;
+  text-align: center;
+  text-decoration: none;
+  color: #FFF;
+  border: 2px solid #FFF; }
+
+.overlay-button:hover {
+  position: relative;
+  z-index: 90;
+  background-color: white;
+  box-shadow: 0px 0px 2px 2px rgba(255, 255, 255, 0.5);
+  color: #0e1725; }
+
 .tile {
   display: block;
   float: left;
@@ -142,11 +195,12 @@ h1 {
 
 .on {
   position: relative;
-  z-index: 100;
+  z-index: 90;
   background-color: white;
-  box-shadow: 0px 0px 2px 2px rgba(255, 255, 255, 0.5); }
+  box-shadow: 0px 0px 2px 2px rgba(255, 255, 255, 0.5);
+  color: #0e1725; }
 
-.tile:nth-child(5n) {
+.tile:nth-of-type(5n) {
   margin-right: 0px; }
 
 .left:before, .up:before, .right:after, .down:after {

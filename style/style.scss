@@ -5,6 +5,7 @@ $baseColor: rgb(26, 43, 70);
 $darkColor: rgb(14, 23, 37);
 $accentColor: hsl(0, 0%, 100%);
 $glowColor: transparentize($accentColor, .5);
+$overlayColor: transparentize($darkColor, 0.05);
 
 @mixin glowText {
 	text-shadow: 0px 0px 10px $glowColor;
@@ -12,9 +13,10 @@ $glowColor: transparentize($accentColor, .5);
 
 @mixin glowBox {
 	position: relative;
-	z-index: 100;
+	z-index: 90;
 	background-color: $accentColor;
 	box-shadow: 0px 0px 2px 2px $glowColor;
+	color: $darkColor;
 }
 
 html {
@@ -23,6 +25,10 @@ html {
 	font: {
 		family: "Cabin Condensed", Futura, "sans-serif";
 	}
+}
+
+.hidden {
+	visibility: hidden;
 }
 
 #wrapper {
@@ -101,6 +107,56 @@ h1 {
 	margin-top: 10px;
 }
 
+#overlay {
+	position: relative;
+	float: none;
+	top: -3px;
+	left: -3px;
+	width: 434px;
+	height: 434px;
+	background-color: $overlayColor;
+	z-index: 100;
+}
+
+#overlay span {
+	@include glowText;
+	display: block;
+	position: absolute;
+	left: 0px;
+	top: 100px;
+	float: none;
+	width: 100%;
+	font-size: 40px;
+	color: $accentColor;
+	text-align: center;
+}
+
+#button-wrapper {
+	position: absolute;
+	left: 0px;
+	top: 160px;
+	width: 100%;
+}
+
+.overlay-button {
+	display: block;
+	width: 200px;
+	height: 35px;
+	line-height: 35px;
+	position: relative;
+	margin: 10px  auto 0px auto;
+	padding: 5px;
+	font-size: 20px;
+	text-align: center;
+	text-decoration: none;
+	color: #FFF;
+	border: 2px solid #FFF;
+}
+
+.overlay-button:hover {
+	@include glowBox;
+}
+
 .tile {
 	display: block;
 	float: left;
@@ -143,7 +199,7 @@ h1 {
 	@include glowBox;
 }
 
-.tile:nth-child(5n) {
+.tile:nth-of-type(5n) {
 	margin-right: 0px;
 }
 

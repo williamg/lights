@@ -1,6 +1,6 @@
 // GLOBAL VARIABLES
 var GRID_SIZE = 5;
-var SOLUTION_LENGTH = 17;
+var SOLUTION_LENGTH = 1;
 var DIR_PROB = 0.25;
 
 var startingGrid;
