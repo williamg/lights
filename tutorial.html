@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Lights</title>
+	<title>Lights Tutorial</title>
 
 	<link href='http://fonts.googleapis.com/css?family=Cabin+Condensed:400,500,600,700' rel='stylesheet' type='text/css'>
 	<link href="style/style.css" rel="stylesheet" type="text/css">
@@ -25,7 +25,7 @@
 
 		<div id="buttons">
 			<div id="reset" class="button">Reset</div>
-			<div id="new" class="button">New Grid</div>
+			<div id="skip" class="button">Skip Tutorial</div>
 		</div>
 
 		<div id="grid">
@@ -56,31 +56,14 @@
 			<div id="t24" class="tile"></div>
 		</div>
 
-		<p>Turn on all the lights in as few clicks as possible. Most lights toggle
-		all 4 adjacent lights in addition to itself. However, some lights only
-		control the adjacent lights in certain directions, denoted by arrows. - 
-		<a href="http://williamg.me/lights/tutorial.html">Tutorial</a></p>
-
-		<p>I developed Lights in my spare time, and it is hosted at no cost to
-		me thanks to Github pages. That said, if you enjoyed the game and are 
-		feeling generous, you can buy me a cup of coffee on Paypal:</p>
-
-		<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-		<input type="hidden" name="cmd" value="_donations">
-		<input type="hidden" name="business" value="C8BDDLM5SYHAU">
-		<input type="hidden" name="lc" value="US">
-		<input type="hidden" name="item_name" value="Lights">
-		<input type="hidden" name="currency_code" value="USD">
-		<input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_SM.gif:NonHosted">
-		<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-		<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-		</form>
+		<p id="tutorial">The goal of the game is to turn on all the lights.
+		<a id="next" href="#">Next</a></p>
 
 		<span id="copy">Designed and developed by William Ganucheau, 2014.</span>
 	</div>
 
 	<script src="js/lights.js"></script>
-	<script src="js/game.js"></script>
+	<script src="js/tutorial.js"></script>
 
 </body>
 </html>

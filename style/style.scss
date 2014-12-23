@@ -211,10 +211,16 @@ h1 {
 	bottom: 10px;
 }
 
-p:first-of-type {
-	padding-bottom: 20px;
-	border-bottom: 1px solid #FFF;
+p:last-of-type {
+	border-top: 1px solid #FFF;
+	padding-top: 10px;
 }
+
+p:first-of-type {
+	padding-top: 0px;
+	border-top: 0px solid #FFF;
+}
+
 
 p {
 	display: block;
@@ -223,6 +229,20 @@ p {
 	width: 450px;
 	font-size: 20px;
 	line-height: 25px;
+
+	transition: color 0.2s ease-in-out;
+	-o-transition: color 0.2s ease-in-out;
+	-moz-transition: color 0.2s ease-in-out;
+	-webkit-transition: color 0.2s ease-in-out;
+	-ms-transition: color 0.2s ease-in-out;
+}
+
+p a {
+	color: #FFF;
+}
+
+p.hidden {
+	color: $baseColor;
 }
 
 form {
