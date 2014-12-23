@@ -7,7 +7,8 @@ var cookies;
 */
 
 var currentStep = 0;
-var lastStep = 7;
+var stepMoves = 0;
+var lastStep = 6;
 
 // Implementation
 function nextStep() {
@@ -26,7 +27,7 @@ function bindUtilityButtons() {
 	resetBtn.addEventListener("click", function(evt) {
 		ga('send', 'event', 'tutorial', 'reset', 'reset-step', currentStep);
 		ga('send', 'event', 'tutorial', 'reset', 'reset-score', getNowScore());
-		grid = reset(grid, startingGrid);
+		grid = reset(grid, startingGrid, stepMoves);
 	}, false);
 
 	var skipTutorial = document.getElementById("skip");
@@ -50,9 +51,6 @@ function changeInstructions(newInstructions) {
 
 		if(currentStep == 0)
 			words.innerHTML += ' - <a href="#" id="next">Next</a>';
-
-		if(currentStep == lastStep)
-			words.innerHTML += ' <a href="http://williamg.me/lights">Play Lights!</a>'
 
 		words.className = "";
 
@@ -80,83 +78,64 @@ function countDirected(grid) {
 }
 
 function showStep() {
-	var tileDivs = document.getElementsByClassName("tile");
+	var instructions = undefined;
+	var newGrid = undefined;
 
 	switch(currentStep) {
 		case 0:
-			grid = Grid(GRID_SIZE, 0);
-			var instructions = "The goal of the game is to turn on all the lights in as few clicks as possible."
-			changeInstructions(instructions);
-			reset(undefined, grid);
-
-			for(var t = 0; t < tileDivs.length; t++) {
-				tileDivs[t].className = "tile on";
-				tileDivs[t].removeEventListener("click", handleClick, false);
-			}
+			stepMoves = 0;
+			newGrid = Grid(GRID_SIZE, 0);
+			instructions = "The goal of the game is to turn on all the lights in as few clicks as possible."
 			break;
 		case 1:
-			var instructions = "Most lights control themselves as well as the 4 adjacent lights. Try to solve the board above. The 'Reset' button can be used to return to the original board state if you make a mistake.";
-			changeInstructions(instructions);
-			var newGrid = Grid(GRID_SIZE, 0);
+			stepMoves = 3;
+			instructions = "Most lights control themselves as well as the 4 adjacent lights. Try to solve the board above. The 'Reset' button can be used to return to the original board state if you make a mistake.";
+			newGrid = Grid(GRID_SIZE, 0);
 			toggle(newGrid, 2, 2);
-			reset(grid, newGrid);
-			listenForClicks();
 			break;
 		case 2:
-			var instructions = "Corner and edge pieces only control adjacent tiles that are on the board.";
-			changeInstructions(instructions);
-			var newGrid = Grid(GRID_SIZE, 0);
+			stepMoves = 5;
+			instructions = "Corner and edge pieces only control adjacent tiles that are on the board.";
+			newGrid = Grid(GRID_SIZE, 0);
 			toggle(newGrid, 0, 0);
 			toggle(newGrid, 4, 2);
-			reset(grid, newGrid);
-			listenForClicks();
 			break;
 		case 3:
-			var instructions = "Here's an easy one to get started. It can be solved in only 4 clicks!";
-			changeInstructions(instructions);
-			var newGrid = Grid(GRID_SIZE, 0);
+			stepMoves = 16;
+			instructions = "Here's an easy one to get started. It can be solved in only 4 clicks!";
+			newGrid = Grid(GRID_SIZE, 0);
 			unsolve(newGrid, 4);
-			reset(grid, newGrid);
-			listenForClicks();
 			break;
 		case 4:
-			var instructions = "This one may be a bit more challenging.";
-			changeInstructions(instructions);
-			var newGrid = Grid(GRID_SIZE, 0);
+			stepMoves = 16;
+			instructions = "This one may be a bit more challenging. Be careful! You only have " + stepMoves + " moves before you have to start over!";
+			newGrid = Grid(GRID_SIZE, 0);
 			unsolve(newGrid, 6);
-			reset(grid, newGrid);
-			listenForClicks();
 			break;
 		case 5:
-			var instructions = "Some lights are directed, and only control lights in certain directions, denoted by arrows.";
-			changeInstructions(instructions);
-			var newGrid = Grid(GRID_SIZE, 0);
+			stepMoves = 4;
+			instructions = "Some lights are directed, and only control lights in certain directions, denoted by arrows.";
+			newGrid = Grid(GRID_SIZE, 0);
 			newGrid.tiles[0][2].right = false;
 			newGrid.tiles[3][4].up = false;
 			newGrid.tiles[3][4].left = false;
 			toggle(newGrid, 0, 2);
 			toggle(newGrid, 3, 4);
-			reset(grid, newGrid);
-			listenForClicks();
 			break;
 		case 6:
-			var instructions = "This makes puzzles a bit more...interesting.";
-			changeInstructions(instructions);
+			stepMoves = 16;
+			instructions = "This makes puzzles a bit more...interesting.";
 
-			var newGrid = Grid(GRID_SIZE, 0.15);
+			newGrid = Grid(GRID_SIZE, 0.15);
 			while(countDirected(newGrid) < 3)
 				newGrid = Grid(GRID_SIZE, 0.15);
 			
 			unsolve(newGrid, 4);
-			reset(grid, newGrid);
-			listenForClicks();
-			break;
-		case 7:
-			var instructions = "Congratulations! You've finished the tutorial! Now try the real thing!";
-			changeInstructions(instructions);
 			break;
 	}
-
+	reset(grid, newGrid, stepMoves);
+	listenForClicks();
+	changeInstructions(instructions);
 	displayGrid();
 }
 
@@ -169,7 +148,7 @@ function handleWin() {
 	}
 
 	fancyFlashEffect();
-	if(currentStep != lastStep - 1)
+	if(currentStep != lastStep)
 		setTimeout(nextStep, 1200);
 	else {
 		ga('send', 'event', 'tutorial', 'completeTutorial');
@@ -194,7 +173,29 @@ function displayCompleteScreen() {
 	overlay.className = "";
 }
 
+function handleLoss() {
+	ga('send', 'event', 'game', 'loss', 'loss');
+	
+	var overlay = document.getElementById("overlay");
+	overlay.innerHTML = '';
+	overlay.innerHTML += '<span>Try again!!</span>\n';
+	overlay.innerHTML += '<div id="button-wrapper">\n\t';
+	overlay.innerHTML += '</div>';
+
+	var wrapper = document.getElementById("button-wrapper");
+	wrapper.innerHTML = '<a id="playAgain" href="#" class="overlay-button">Retry!</a>\n';
+
+	var replay = document.getElementById("playAgain");
+	replay.addEventListener("click", function() {
+		overlay.className = "hidden";
+		reset(grid, startingGrid, stepMoves);
+	}, false);
+
+	overlay.className = "";
+}
+
 function handleReset() {
+	listenForClicks();
 	var overlay = document.getElementById("overlay");
 	overlay.className = "hidden";
 }

@@ -200,12 +200,16 @@ function handleClick(evt) {
 	displayGrid(grid);
 
 	// Update score
-	setNowScore(getNowScore() + 1);
+	setNowScore(getNowScore() - 1);
 
 	if(isSolved(grid)) {
 		// Delayed to let animations finish
 		setTimeout(function() {
 			handleWin();
+		}, 200);
+	} else if(getNowScore() == 0) {
+		setTimeout(function() {
+			handleLoss();
 		}, 200);
 	}
 }
@@ -289,7 +293,7 @@ function displayGrid() {
 			div.className += " down";
 	}
 }
-function reset(oldGrid, newGrid) {
+function reset(oldGrid, newGrid, initScore) {
 	grid = newGrid;
 	
 	if(grid == undefined) {
@@ -311,7 +315,7 @@ function reset(oldGrid, newGrid) {
 		}
 	}
 
-	setNowScore(0);
+	setNowScore(initScore);
 	setTimeout(displayGrid.bind(this, grid), 200);
 	startingGrid = copyGrid(grid);
 	handleReset();

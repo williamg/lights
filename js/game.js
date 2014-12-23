@@ -5,18 +5,21 @@ var solution;
 var grid;
 */
 
+var MAX_MOVES = 30;
+
 // Implementation
 function bindUtilityButtons() {
 	var resetBtn = document.getElementById("reset");
 	resetBtn.addEventListener("click", function(evt) {
 		ga('send', 'event', 'game', 'reset', 'reset', getNowScore());
-		grid = reset(grid, startingGrid);
+		grid = reset(grid, startingGrid, MAX_MOVES);
 	}, false);
 
 	var newGridBtn = document.getElementById("new");
 	newGridBtn.addEventListener("click", function(evt) {
 		ga('send', 'event', 'game', 'newBoard', 'newBoard', getNowScore());
-		grid = reset(grid);
+		grid = reset(grid, undefined, MAX_MOVES);
+
 	}, false);
 }
 
@@ -34,7 +37,7 @@ function handleWin() {
 
 	var bestScore = getCookie("bestScore");
 	var nowScore = getNowScore();
-	if (isNaN(bestScore) || nowScore < bestScore) {
+	if (isNaN(bestScore) || nowScore > bestScore) {
 		setBestScore(nowScore);
 		setCookie("bestScore", nowScore);
 	}
@@ -94,7 +97,28 @@ function displayWinScreen() {
 	var replay = document.getElementById("playAgain");
 	replay.addEventListener("click", function() {
 		overlay.className = "hidden";
-		reset(grid);
+		reset(grid, undefined, MAX_MOVES);
+	}, false);
+
+	overlay.className = "";
+}
+
+function handleLoss() {
+	ga('send', 'event', 'game', 'loss', 'loss');
+	
+	var overlay = document.getElementById("overlay");
+	overlay.innerHTML = '';
+	overlay.innerHTML += '<span>You lose!</span>\n';
+	overlay.innerHTML += '<div id="button-wrapper">\n\t';
+	overlay.innerHTML += '</div>';
+
+	var wrapper = document.getElementById("button-wrapper");
+	wrapper.innerHTML = '<a id="playAgain" href="#" class="overlay-button">Retry!</a>\n';
+
+	var replay = document.getElementById("playAgain");
+	replay.addEventListener("click", function() {
+		overlay.className = "hidden";
+		reset(grid, startingGrid, MAX_MOVES);
 	}, false);
 
 	overlay.className = "";
@@ -122,7 +146,8 @@ for(var i = 0; i < cookies.length; i++)
 
 // Set best score box
 var bestScore = getCookie("bestScore");
-if(bestScore === undefined) setBestScore("--");
+if(bestScore === undefined || bestScore > MAX_SCORE-5)
+	setBestScore("--");
 else setBestScore(bestScore);
 
 var tutorial = getCookie("tutorial");
@@ -136,4 +161,4 @@ if((tutorial == "no" || tutorial === undefined) && bestScore === undefined) {
 bindUtilityButtons();
 
 // Generate and display the grid
-grid = reset();
+grid = reset(undefined, undefined, MAX_MOVES);
