@@ -9,17 +9,20 @@ var grid;
 function bindUtilityButtons() {
 	var resetBtn = document.getElementById("reset");
 	resetBtn.addEventListener("click", function(evt) {
+		ga('send', 'event', 'game', 'reset', getNowScore());
 		grid = reset(grid, startingGrid);
 	}, false);
 
 	var newGridBtn = document.getElementById("new");
 	newGridBtn.addEventListener("click", function(evt) {
+		ga('send', 'event', 'game', 'newBoard', getNowScore());
 		grid = reset(grid);
 	}, false);
 }
 
 // Called when a move solves a board
 function handleWin() {
+	ga('send', 'event', 'game', 'win', getNowScore());
 	var tileDivs = document.getElementsByClassName("tile");
 	for(var t = 0; t < tileDivs.length; t++) {
 		tileDivs[t].className = "tile on";

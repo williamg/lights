@@ -24,11 +24,13 @@ function prevStep() {
 function bindUtilityButtons() {
 	var resetBtn = document.getElementById("reset");
 	resetBtn.addEventListener("click", function(evt) {
+		ga('send', 'event', 'tutorial', 'reset');
 		grid = reset(grid, startingGrid);
 	}, false);
 
 	var skipTutorial = document.getElementById("skip");
 	skipTutorial.addEventListener("click", function(evt) {
+		ga('send', 'event', 'tutorial', 'skipTutorial');
 		setCookie("tutorial", "yes");
 		window.location.href = "http://williamg.me/lights";
 	}, false);
@@ -169,6 +171,7 @@ function handleWin() {
 	if(currentStep != lastStep - 1)
 		setTimeout(nextStep, 1200);
 	else {
+		ga('send', 'event', 'tutorial', 'completeTutorial');
 		var skip = document.getElementById("skip");
 		skip.innerHTML = "Play Lights!";
 		setCookie("tutorial", "yes");

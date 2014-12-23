@@ -8,6 +8,8 @@ var solution;
 var grid;
 var cookies = ["bestScore", "tutorialFinished"];
 
+var GAME_MODE = (window.location.href.indexOf("tutorial") >= 0) ? "tutorial" : "game";
+
 // Define some objects
 function Tile(x_, y_) {
 	var tile = {
@@ -187,6 +189,7 @@ function listenForClicks(grid) {
 }
 
 function handleClick(evt) {
+	ga('send', 'event', GAME_MODE, 'tile_click');
 	var tileDiv = evt.target;
 	var id = tileDiv.id;
 	var index = parseInt(id.substr(1));
