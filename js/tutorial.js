@@ -24,7 +24,8 @@ function prevStep() {
 function bindUtilityButtons() {
 	var resetBtn = document.getElementById("reset");
 	resetBtn.addEventListener("click", function(evt) {
-		ga('send', 'event', 'tutorial', 'reset', 'reset', currentStep);
+		ga('send', 'event', 'tutorial', 'reset', 'reset-step', currentStep);
+		ga('send', 'event', 'tutorial', 'reset', 'reset-score', getNowScore());
 		grid = reset(grid, startingGrid);
 	}, false);
 
