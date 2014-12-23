@@ -185,6 +185,10 @@ function handleReset() {}
 if(window.location.href.indexOf("lights.williamg.me") >= 0)
 	window.location.replace("http://williamg.me/lights/tutorial.html");
 
+window.addEventListener("onbeforeunload", function() {
+	ga('send', 'event', 'tutorial', 'leave', 'leave', currentStep);
+}, false);
+
 // Update cookie
 for(var i = 0; i < cookies.length; i++)
 	refreshCookie(cookies[i]);

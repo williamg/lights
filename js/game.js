@@ -102,6 +102,11 @@ function handleReset() {
 if(window.location.href.indexOf("lights.williamg.me") >= 0)
 	window.location.replace("http://williamg.me/lights");
 
+window.addEventListener("onbeforeunload", function() {
+	if(!isSolved(grid))
+		ga('send', 'event', 'tutorial', 'leaveBeforeWin', 'leaveBeforeWin', getNowScore());
+}, false);
+
 // Update cookie
 for(var i = 0; i < cookies.length; i++)
 	refreshCookie(cookies[i]);
