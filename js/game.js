@@ -146,7 +146,7 @@ for(var i = 0; i < cookies.length; i++)
 
 // Set best score box
 var bestScore = getCookie("bestScore");
-if(bestScore === undefined || bestScore > MAX_SCORE-5)
+if(bestScore === undefined || bestScore > MAX_MOVES-5)
 	setBestScore("--");
 else setBestScore(bestScore);
 
